@@ -14,24 +14,38 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm install --legacy-peer-deps'
+            }
+        }
+
+        stage('Build React App') {
             steps {
                 bat 'npm run build'
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQubeServer') {
-    bat 'mvn clean verify'
-}
+       stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            script {
+                def scannerHome = tool 'SonarScanner'
 
+                bat """
+                "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                -Dsonar.projectKey=react-app ^
+                -Dsonar.projectName=React-App ^
+                -Dsonar.sources=src
+                """
             }
         }
+    }
+}
 
-       stage('Deploy to Nexus') {
-    steps {
-        withCredentials([usernamePassword(
+        stage('Deploy to Nexus') {
+            steps {
+                withCredentials([usernamePassword(
                     credentialsId: 'nexus-creds',
                     usernameVariable: 'NEXUS_USER',
                     passwordVariable: 'NEXUS_PASS'
@@ -42,9 +56,10 @@ pipeline {
                     --upload-file react-build.tar ^
                     http://localhost:8081/repository/react-builds/react-nexus-demo/react-build.tar
                     '''
+                }
+            }
         }
     }
-}
 
     post {
         success {
