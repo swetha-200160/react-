@@ -9,8 +9,8 @@ pipeline {
 
         stage('Pull Code') {
             steps {
-                git url: 'https://github.com/your-repo/react-nexus-demo.git',
-                    branch: 'main'
+                git url: 'https://github.com/swetha-200160/react-.git',
+                    branch: 'master'
             }
         }
 
