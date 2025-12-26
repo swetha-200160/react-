@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS'   // Configure NodeJS in Jenkins tools
+        nodejs 'NodeJS'
+        sonarRunner 'SonarScanner'
     }
 
     stages {
@@ -16,13 +17,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                bat 'npm install --legacy-peer-deps'
             }
         }
 
         stage('Build React App') {
             steps {
                 bat 'npm run build'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    bat """
+                    sonar-scanner ^
+                    -Dsonar.projectKey=react-app ^
+                    -Dsonar.projectName=React-App ^
+                    -Dsonar.sources=src
+                    """
+                }
             }
         }
 
@@ -46,7 +60,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ React build successfully uploaded to Nexus'
+            echo '✅ React build analyzed by SonarQube and uploaded to Nexus successfully'
         }
         failure {
             echo '❌ Pipeline failed'
