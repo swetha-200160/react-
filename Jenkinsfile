@@ -3,7 +3,6 @@ pipeline {
 
     tools {
         nodejs 'NodeJS'
-        sonarRunner 'SonarScanner'
     }
 
     stages {
@@ -15,13 +14,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                bat 'npm install --legacy-peer-deps'
-            }
-        }
-
-        stage('Build React App') {
+        stage('Build') {
             steps {
                 bat 'npm run build'
             }
@@ -29,20 +22,16 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    bat """
-                    sonar-scanner ^
-                    -Dsonar.projectKey=react-app ^
-                    -Dsonar.projectName=React-App ^
-                    -Dsonar.sources=src
-                    """
-                }
+                withSonarQubeEnv('SonarQubeServer') {
+    bat 'mvn clean verify'
+}
+
             }
         }
 
-        stage('Upload Build to Nexus') {
-            steps {
-                withCredentials([usernamePassword(
+       stage('Deploy to Nexus') {
+    steps {
+        withCredentials([usernamePassword(
                     credentialsId: 'nexus-creds',
                     usernameVariable: 'NEXUS_USER',
                     passwordVariable: 'NEXUS_PASS'
@@ -53,17 +42,16 @@ pipeline {
                     --upload-file react-build.tar ^
                     http://localhost:8081/repository/react-builds/react-nexus-demo/react-build.tar
                     '''
-                }
-            }
         }
     }
+}
 
     post {
         success {
-            echo '✅ React build analyzed by SonarQube and uploaded to Nexus successfully'
+            echo '✅ Pull → Build → Sonar → Nexus SUCCESS'
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo '❌ Pipeline FAILED'
         }
     }
 }
