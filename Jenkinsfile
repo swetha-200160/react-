@@ -51,10 +51,10 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     bat '''
-                    jar -cvf react-build.jar build
+                    tar -cvf react-build.tar build
                     curl -u %NEXUS_USER%:%NEXUS_PASS% ^
-                    --upload-file react-build.jar ^
-                    http://localhost:8081/repository/react-builds/react-nexus-demo/react-build.jar
+                    --upload-file react-build.tar ^
+                    http://localhost:8081/repository/react-builds/react-nexus-demo/react-build.tar
                     '''
                 }
             }
