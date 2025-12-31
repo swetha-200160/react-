@@ -1,20 +1,13 @@
-# 1. Use Node image
-FROM node:18-alpine
-
-# 2. Set working directory
+# Build stage
+FROM node:18 AS build
 WORKDIR /app
-
-# 3. Copy package files
 COPY package*.json ./
-
-# 4. Install dependencies (IMPORTANT FIX)
-RUN npm install --legacy-peer-deps
-
-# 5. Copy source code
+RUN npm install
 COPY . .
+RUN npm run build
 
-# 6. Expose React port
-EXPOSE 3000
-
-# 7. Start React app
-CMD ["npm", "start"]
+# Run stage
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
