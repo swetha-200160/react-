@@ -1,72 +1,50 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
+    environment {
+        IMAGE_NAME = "react-docker-demo"
+        CONTAINER_NAME = "react-container"
     }
 
     stages {
 
-        stage('Pull Code') {
+        stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/swetha-200160/react-.git',
-                    branch: 'master'
+                git branch: 'main',
+                    url: 'https://github.com/your-username/react-docker-demo.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build Docker Image') {
             steps {
-                bat 'npm install --legacy-peer-deps'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        stage('Build React App') {
+        stage('Stop Old Container') {
             steps {
-                bat 'npm run build'
+                sh '''
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                '''
             }
         }
 
-       stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('SonarQube') {
-            script {
-                def scannerHome = tool 'SonarScanner'
-
-                bat """
-                "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                -Dsonar.projectKey=react-app ^
-                -Dsonar.projectName=React-App ^
-                -Dsonar.sources=src
-                """
-            }
-        }
-    }
-}
-
-        stage('Deploy to Nexus') {
+        stage('Run Docker Container') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'nexus-creds',
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
-                    bat '''
-                    tar -cvf react-build.tar build
-                    curl -u %NEXUS_USER%:%NEXUS_PASS% ^
-                    --upload-file react-build.tar ^
-                    http://localhost:8081/repository/react-builds/react-nexus-demo/react-build.tar
-                    '''
-                }
+                sh '''
+                docker run -d -p 3000:80 --name $CONTAINER_NAME $IMAGE_NAME
+                '''
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pull → Build → Sonar → Nexus SUCCESS'
+            echo 'React App Deployed Successfully 🎉'
         }
         failure {
-            echo '❌ Pipeline FAILED'
+            echo 'Deployment Failed ❌'
         }
     }
 }
