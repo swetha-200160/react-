@@ -1,8 +1,9 @@
+import React from 'react';
+
 function App() {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>React App Running in Docker 🚀</h1>
-      <p>Docker Compose + Volume + Network</p>
+    <div className='App'>
+      <h1>Fitness App</h1>
     </div>
   );
 }
