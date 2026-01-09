@@ -1,0 +1,17 @@
+services:
+  react-app:
+    build: .
+    container_name: react-app
+    ports:
+      - "3000:80"
+    volumes:
+      - react-logs:/var/log/nginx
+    networks:
+      - react-network
+    restart: unless-stopped
+
+volumes:
+  react-logs:
+
+networks:
+  react-network:
