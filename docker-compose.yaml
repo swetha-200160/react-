@@ -3,7 +3,7 @@ services:
     image: react-app
     container_name: react-ui
     ports:
-      - "5050:80"
+      - "5052:80"
     volumes:
       - react-logs:/var/log/nginx
     networks:
