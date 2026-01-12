@@ -1,12 +1,16 @@
 services:
-  react-app:
-    build: .
-    container_name: react-app
+  react-ui:
+    image: react-app
+    container_name: react-ui
     ports:
-      - "5052:80"
+      - "5050:80"
     volumes:
-      - react-data:/usr/share/nginx/html
-    restart: unless-stopped
+      - react-logs:/var/log/nginx
+    networks:
+      - react-net
 
 volumes:
-  react-data:
+  react-logs:
+
+networks:
+  react-net:
