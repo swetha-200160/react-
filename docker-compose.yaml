@@ -3,7 +3,7 @@ services:
     build: .
     container_name: react-app
     ports:
-      - "5050:80"
+      - "5052:80"
     volumes:
       - react-data:/usr/share/nginx/html
     restart: unless-stopped
