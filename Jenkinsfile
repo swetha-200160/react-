@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-token',
+                    credentialsId: 'github-token1',
                     url: 'https://github.com/swetha-200160/react.git'
             }
         }
