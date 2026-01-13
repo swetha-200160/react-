@@ -8,7 +8,7 @@ pipeline {
     steps {
         git branch: 'master',
             credentialsId: 'github-token',
-            url: 'https://github.com/swethasuresh/project_fitness_app.git'
+            url: 'https://github.com/swetha-200160/react-.git'
     }
 }
 
