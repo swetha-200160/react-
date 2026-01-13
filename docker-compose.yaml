@@ -5,7 +5,7 @@ services:
     image: react-app3
     container_name: react-ui
     ports:
-      - "7070:80"
+      - "8085:80"
     restart: always
     networks:
       - app-network
