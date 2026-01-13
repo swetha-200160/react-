@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-token',
-    url: 'https://github.com/your-username/project_fitness_app.git'
+    url: 'https://github.com/swetha-200160/react-.git'
 
             }
         }
