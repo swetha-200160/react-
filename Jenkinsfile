@@ -3,12 +3,13 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    credentialsId: 'github-token1',
-                    url: 'https://github.com/swetha-200160/react.git'
-            }
-        }
+    steps {
+        git branch: 'main',
+            credentialsId: 'github-token1',
+            url: 'https://github.com/swetha-200160/<REAL-REPO-NAME>.git'
+    }
+}
+
 
         stage('Install Dependencies') {
             steps {
