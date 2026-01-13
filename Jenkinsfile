@@ -4,9 +4,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github-token',
-                    url: 'https://github.com/swetha-200160/react-.git',
-                    branch: 'master'
+              stage('Checkout') {
+    steps {
+        git branch: 'master',
+            credentialsId: 'github-token',
+            url: 'https://github.com/swethasuresh/project_fitness_app.git'
+    }
+}
+
             }
         }
 
