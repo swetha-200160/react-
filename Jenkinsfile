@@ -4,14 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-              stage('Checkout') {
-    steps {
-        git branch: 'master',
-            credentialsId: 'github-token',
-            url: 'https://github.com/swetha-200160/react.git'
-    }
-}
-
+                git branch: 'master',
+                    credentialsId: 'github-token',
+                    url: 'https://github.com/swetha-200160/react.git'
             }
         }
 
@@ -36,8 +31,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
-                docker stop react-app || true
-                docker rm react-app || true
+                docker stop react-app || exit 0
+                docker rm react-app || exit 0
                 docker run -d -p 3000:80 --name react-app react-app:latest
                 '''
             }
