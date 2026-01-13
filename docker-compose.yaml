@@ -1,16 +1,15 @@
+version: "3.8"
+
 services:
-  react-ui:
-    image: react-app
+  react-app:
+    image: react-app3
     container_name: react-ui
     ports:
-      - "5054:80"
-    volumes:
-      - react-logs:/var/log/nginx
+      - "7070:80"
+    restart: always
     networks:
-      - react-net
-
-volumes:
-  react-logs:
+      - app-network
 
 networks:
-  react-net:
+  app-network:
+    driver: bridge
