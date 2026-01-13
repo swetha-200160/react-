@@ -16,7 +16,7 @@ pipeline {
             steps {
                 git branch: 'master',
                     credentialsId: 'github',
-                    url: 'https://github.com/swetha-200160/react.git'
+                    url: 'https://github.com/swetha-200160/react-.git'
             }
         }
 
