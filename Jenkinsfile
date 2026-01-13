@@ -5,32 +5,36 @@ pipeline {
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-token',
-    url: 'https://github.com/swetha-200160/react-.git'
-
+                    url: 'https://github.com/swetha-200160/react-.git',
+                    branch: 'master'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Build React App') {
             steps {
-                sh 'npm run build'
+                bat 'npm run build'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t react-app3 .'
+                bat 'docker build -t react-app:latest .'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker compose up -d'
+                bat '''
+                docker stop react-app || true
+                docker rm react-app || true
+                docker run -d -p 3000:80 --name react-app react-app:latest
+                '''
             }
         }
     }
