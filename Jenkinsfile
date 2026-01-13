@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_SERVER = 'sonarqube-server'
         NEXUS_URL = 'http://localhost:8081'
         NEXUS_REPO = 'react-repo'
-        NEXUS_CREDENTIALS = 'nexus-creds'
         APP_NAME = 'react-app'
         VERSION = '1.0.0'
     }
@@ -28,7 +26,7 @@ pipeline {
 
         stage('SonarQube Code Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
+                withSonarQubeEnv('sonarqube') {
                     bat '''
                     sonar-scanner ^
                     -Dsonar.projectKey=react-app ^
