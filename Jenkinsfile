@@ -24,18 +24,20 @@ pipeline {
             }
         }
 
-        stage('SonarQube Code Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    bat '''
-                    sonar-scanner ^
-                    -Dsonar.projectKey=react-app ^
-                    -Dsonar.projectName=ReactApp ^
-                    -Dsonar.sources=src
-                    '''
-                }
-            }
+       stage('SonarQube Code Analysis') {
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            bat """
+            "${tool 'SonarScanner'}\\bin\\sonar-scanner" ^
+            -Dsonar.projectKey=react-app ^
+            -Dsonar.projectName=ReactApp ^
+            -Dsonar.sources=src
+            """
         }
+    }
+}
+
+
 
         stage('Build React App') {
             steps {
