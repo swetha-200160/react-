@@ -26,7 +26,7 @@ pipeline {
 
         stage('SonarQube Code Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
+                withSonarQubeEnv('SonarQube') {
                     bat '''
                     sonar-scanner ^
                     -Dsonar.projectKey=react-app ^
