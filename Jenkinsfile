@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS'                // Jenkins → Global Tool Configuration
-        sonarScanner 'SonarScanner'    // Jenkins → Global Tool Configuration
+        nodejs 'NodeJS'
+        sonarRunner 'SonarScanner'
     }
 
     environment {
@@ -32,7 +32,9 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withCredentials([
+                        string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')
+                    ]) {
                         bat """
                         sonar-scanner ^
                         -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
@@ -63,11 +65,13 @@ pipeline {
 
         stage('Upload Artifact to Nexus') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'nexus-creds',
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'nexus-creds',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    )
+                ]) {
                     bat """
                     curl -u %NEXUS_USER%:%NEXUS_PASS% ^
                     --upload-file %ARTIFACT_NAME% ^
@@ -90,15 +94,6 @@ pipeline {
                 docker run -d -p 3000:80 --name react-app react-app:latest
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Pipeline executed successfully'
-        }
-        failure {
-            echo '❌ Pipeline failed'
         }
     }
 }
